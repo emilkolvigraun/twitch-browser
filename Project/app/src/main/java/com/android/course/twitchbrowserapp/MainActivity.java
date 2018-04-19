@@ -5,7 +5,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Prints", "length of response: " + response.length() + response.toString());
+
+                DisplayMetrics metrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+                int height = metrics.heightPixels;
+                int width = metrics.widthPixels;
+
                 try {
                     // "data" is the name of the TwitchAPI JSON Array
                     // This array gets divided into objects (gameObject)
@@ -79,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                         // For every entry in the JSONArray make an object and get its name as well as box art.
                         JSONObject gameObject = jsonArr.getJSONObject(i);
                         String name = gameObject.get("name").toString();
-                        String image = convertToReadableURL(gameObject.get("box_art_url").toString(), 200, 300);
+                        String image = convertToReadableURL(gameObject.get("box_art_url").toString(), (width/3), (height/4));
 
                         // Cuts the game titles to be under 20 chars to prevent multiline TextView.
                         String tempName;
@@ -117,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         };
         queue.add(jsonObjReq);
+        System.out.println(queue);
     }
 
     //Fills the container with images as well as matching text.
@@ -154,15 +164,14 @@ public class MainActivity extends AppCompatActivity {
     private class DownloadImagesFromURI extends AsyncTask<URI, Integer, Long> {
         @Override
         protected Long doInBackground(URI... uris) {
-            for (int i = 0; i < gameImageURLs.size(); i++) {
-                try {
+            try {
+                for (int i = 0; i < gameImageURLs.size(); i++) {
                     URL url = new URL(gameImageURLs.get(i));
                     Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     gameImage.add(image);
-                } catch (IOException e) {
+            }} catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
             return null;
         }
 
