@@ -8,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -138,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < ((LinearLayout)container.getChildAt(i)).getChildCount(); j++) {
                 ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setImageBitmap(gameImage.get(fillCounter));
                 ((TextView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(1)).setText(gameNames.get(fillCounter));
+                //container.getChildAt(i).setOnClickListener(new Click_Listener());
+                ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setOnClickListener(new Click_Listener());
                 fillCounter++;
             }
         }
@@ -177,6 +181,15 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(Long result) {
             fillContainer();
+        }
+    }
+
+    private class Click_Listener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            Log.d("BUTTON", "button clicked...");
+
         }
     }
 
