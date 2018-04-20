@@ -1,5 +1,6 @@
 package com.android.course.twitchbrowserapp;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,13 +8,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -189,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.d("BUTTON", "button clicked...");
-
+            startActivity(new Intent(MainActivity.this, Pop.class));
         }
     }
 
