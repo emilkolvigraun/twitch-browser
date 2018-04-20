@@ -26,7 +26,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo"
+            android:background="@drawable/logo_art"/>
 
         <LinearLayout
             android:id="@+id/LinearLayout"
@@ -71,8 +72,8 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
-
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -90,7 +91,8 @@
                                 android:layout_gravity="bottom"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -107,7 +109,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -134,7 +137,8 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -153,7 +157,8 @@
                                 android:layout_gravity="bottom"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -170,7 +175,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -197,7 +203,8 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -216,7 +223,8 @@
                                 android:layout_gravity="bottom"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -233,7 +241,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -260,7 +269,8 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -279,7 +289,8 @@
                                 android:layout_gravity="bottom"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -296,7 +307,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -323,7 +335,8 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -342,7 +355,8 @@
                                 android:layout_gravity="bottom"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -359,7 +373,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -386,7 +401,8 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -405,7 +421,8 @@
                                 android:layout_gravity="bottom"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
@@ -422,7 +439,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/boxart_placeholder" />
+                                app:srcCompat="@drawable/boxart_placeholder"
+                                android:background="@drawable/game_picker"/>
 
                         </LinearLayout>
 
