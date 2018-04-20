@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         String url = "https://api.twitch.tv/helix/games/top";
+        String stream_url = "https://api.twitch.tv/kraken/streams";
 
         //"Kraken" is deprecated
         // a query for pokemon streams
