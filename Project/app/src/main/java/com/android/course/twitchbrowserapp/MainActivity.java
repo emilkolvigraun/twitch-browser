@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView logo_view = findViewById(R.id.title_logo);
 
-        logo_view.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        logo_view.setImageBitmap(title_logo);
 
         container = findViewById(R.id.container);
         container.setVisibility(View.GONE);
