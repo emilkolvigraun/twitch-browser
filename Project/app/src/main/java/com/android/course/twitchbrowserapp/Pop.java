@@ -3,6 +3,7 @@ package com.android.course.twitchbrowserapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 /**
  * Created by Emil S. Kolvig-Raun on 20-04-2018.

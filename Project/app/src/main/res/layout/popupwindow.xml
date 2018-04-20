@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/popup_drawable"
+    android:clipToPadding="true">
 
     <TextView
         android:id="@+id/textView2"
@@ -12,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="Information about the game here..."
-        android:textColor="@android:color/background_light"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 </RelativeLayout>

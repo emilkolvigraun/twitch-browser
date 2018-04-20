@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     final ArrayList<String> gameNames = new ArrayList<>();
     final ArrayList<Bitmap> gameImage = new ArrayList<>();
     final ArrayList<String> gameImageURLs = new ArrayList<>();
+    final DisplayMetrics metrics = new DisplayMetrics();
+    private int width;
+    private int height;
 
 
     LinearLayout container;
@@ -45,7 +50,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        height = metrics.heightPixels;
+        width = metrics.widthPixels;
+
+        //Remove title bar
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
+
+        ImageView logo_view = findViewById(R.id.title_logo);
+
+        logo_view.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
 
         container = findViewById(R.id.container);
         container.setVisibility(View.GONE);
@@ -72,11 +91,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 Log.d("Prints", "length of response: " + response.length() + response.toString());
 
-                DisplayMetrics metrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-                int height = metrics.heightPixels;
-                int width = metrics.widthPixels;
 
                 try {
                     // "data" is the name of the TwitchAPI JSON Array
