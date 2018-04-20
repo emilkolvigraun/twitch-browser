@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -53,8 +54,14 @@ public class Pop extends Activity {
     private void setPopUpContent(ArrayList<String> info){
         TextView text = findViewById(R.id.textView_pop);
         Log.d("DEBUGGING: ", info.toString());
-        text.setText(info.toString());
+
+
+        LinearLayout loading = findViewById(R.id.loadingLayout);
+
+
         text.setAlpha(0f);
+        text.setText(info.toString());
+        loading.setAlpha(0f);
         text.animate()
                 .setDuration(200)
                 .alpha(1f)
