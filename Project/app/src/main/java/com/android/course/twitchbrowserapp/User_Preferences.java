@@ -9,7 +9,6 @@ public class User_Preferences {
 
     private static String current_selection = null;
 
-
     public static void setSelection(String name){
         current_selection = name;
     }
