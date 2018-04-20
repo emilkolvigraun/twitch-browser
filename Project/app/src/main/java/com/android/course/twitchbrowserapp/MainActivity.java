@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    //final ArrayList<String> gameNames = new ArrayList<>();
+    final ArrayList<String> gameNames = new ArrayList<>();
     final ArrayList<Bitmap> gameImage = new ArrayList<>();
     final ArrayList<String> gameImageURLs = new ArrayList<>();
     final DisplayMetrics metrics = new DisplayMetrics();
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         //Add names and images to arrays so they can be added in the layout.
-                        //gameNames.add(tempName);
+                        gameNames.add(tempName);
                         gameImageURLs.add(image);
 
                     }
@@ -149,8 +149,7 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < ((LinearLayout)container.getChildAt(i)).getChildCount(); j++) {
                 ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setImageBitmap(gameImage.get(fillCounter));
                 //((TextView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(1)).setText(gameNames.get(fillCounter));
-                //container.getChildAt(i).setOnClickListener(new Click_Listener());
-                ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setOnClickListener(new Click_Listener());
+                ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setOnClickListener(new Click_Listener(gameNames.get(fillCounter)));
                 fillCounter++;
             }
         }
@@ -195,9 +194,16 @@ public class MainActivity extends AppCompatActivity {
 
     private class Click_Listener implements View.OnClickListener {
 
+        private String name;
+
+        public Click_Listener(String name){
+            this.name = name;
+        }
+
         @Override
         public void onClick(View view) {
             Log.d("BUTTON", "button clicked...");
+            User_Preferences.setSelection(this.name);
             startActivity(new Intent(MainActivity.this, Pop.class));
         }
     }
