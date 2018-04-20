@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Information about the game here..."
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"/>
