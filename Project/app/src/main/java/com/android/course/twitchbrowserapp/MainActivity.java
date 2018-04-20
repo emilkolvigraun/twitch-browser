@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    final ArrayList<String> gameNames = new ArrayList<>();
+    //final ArrayList<String> gameNames = new ArrayList<>();
     final ArrayList<Bitmap> gameImage = new ArrayList<>();
     final ArrayList<String> gameImageURLs = new ArrayList<>();
     final DisplayMetrics metrics = new DisplayMetrics();
@@ -55,10 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         height = metrics.heightPixels;
         width = metrics.widthPixels;
-
-        //Remove title bar
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
 
@@ -113,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         //Add names and images to arrays so they can be added in the layout.
-                        gameNames.add(tempName);
+                        //gameNames.add(tempName);
                         gameImageURLs.add(image);
 
                     }
@@ -151,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < container.getChildCount(); i++) {
             for (int j = 0; j < ((LinearLayout)container.getChildAt(i)).getChildCount(); j++) {
                 ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setImageBitmap(gameImage.get(fillCounter));
-                ((TextView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(1)).setText(gameNames.get(fillCounter));
+                //((TextView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(1)).setText(gameNames.get(fillCounter));
                 //container.getChildAt(i).setOnClickListener(new Click_Listener());
                 ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setOnClickListener(new Click_Listener());
                 fillCounter++;
