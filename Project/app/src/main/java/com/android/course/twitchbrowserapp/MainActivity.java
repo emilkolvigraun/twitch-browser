@@ -92,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 try {
-                    // "data" is the name of the TwitchAPI JSON Array
-                    // This array gets divided into objects (gameObject)
                     String gamesJSONString = response.getString("data");
                     JSONArray jsonArr = new JSONArray(gamesJSONString);
                     for (int i = 0; i < jsonArr.length(); i++) {
@@ -200,15 +198,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, Pop.class));
         }
     }
-
-// Add the request to the RequestQueue.
-
-
-//    var httpRequest = new XMLHttpRequest();
-//
-//    httpRequest.addEventListener('load', clipsLoaded);
-//    httpRequest.open('GET', 'https://api.twitch.tv/kraken/clips/top?limit=10&game=Overwatch&trending=true');
-//    httpRequest.setRequestHeader('Client-ID', 'uo6dggojyb8d6soh92zknwmi5ej1q2');
-//    httpRequest.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json');
-//    httpRequest.send();
 }

@@ -1,12 +1,17 @@
 package com.android.course.twitchbrowserapp;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,43 +36,56 @@ import java.util.Map;
 
 public class Pop extends Activity {
 
-
+    private TextView text;
+    private ImageView logo_view;
     private int width, height;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popupwindow);
 
+        text = findViewById(R.id.textView_pop);
+
+        text.setAlpha(0f);
+
         DisplayMetrics display = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display);
+
+        logo_view = findViewById(R.id.stream_top_title);
+
+        logo_view.setAlpha(0f);
 
         this.width = display.widthPixels;
         this.height = display.heightPixels;
 
-        getWindow().setLayout((int)(this.width*0.7), (int)(this.height*0.5));
+        getWindow().setLayout((int)(this.width*0.8), (int)(this.height*0.65));
 
         requestWithSomeHttpHeaders();
 
     }
 
     private void setPopUpContent(ArrayList<String> info){
-        TextView text = findViewById(R.id.textView_pop);
         Log.d("DEBUGGING: ", info.toString());
-
 
         LinearLayout loading = findViewById(R.id.loadingLayout);
 
-
-        text.setAlpha(0f);
         text.setText(info.toString());
+
+        Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.top_title);
+        logo_view.setImageBitmap(title_logo);
+
         loading.setAlpha(0f);
+
         text.animate()
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
-
-
+        logo_view.animate()
+                .setDuration(200)
+                .alpha(1f)
+                .setListener(null);
     }
 
     private boolean indexExists(final JSONArray list, final int index) {
@@ -94,8 +112,6 @@ public class Pop extends Activity {
             public void onResponse(JSONObject response) {
                 Log.d("Prints", "length of response: " + response.length() + response.toString());
                 try {
-                // "data" is the name of the TwitchAPI JSON Array
-                // This array gets divided into objects (gameObject)
                     ArrayList<String> info = new ArrayList<>();
                     String gamesJSONString = response.getString("streams");
 
@@ -112,6 +128,7 @@ public class Pop extends Activity {
                         String followers = recurseKeys(jsonObj, "followers");
                         String description = recurseKeys(jsonObj, "description");
                         String large_image = recurseKeys(jsonObj, "medium");
+                        String id = recurseKeys(jsonObj, "_id");
 
                         info.add(game);
                         info.add(name);
@@ -121,6 +138,7 @@ public class Pop extends Activity {
                         info.add("Last updated: " + updated_last);
                         info.add(status);
                         info.add(description);
+                        info.add(id);
 
 
                         // For every entry in the JSONArray make an object and get its name as well as box art.
