@@ -81,7 +81,7 @@ public class Pop extends Activity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         // Constructing URL
-        String game_chosen = User_Preferences.getSelection().replaceAll("\\s","");
+        String game_chosen = User_Preferences.getSelection().replaceAll("\\s","%20");
         String url = "https://api.twitch.tv/kraken/streams/?game=" + game_chosen;
 
         // DEBUGGING

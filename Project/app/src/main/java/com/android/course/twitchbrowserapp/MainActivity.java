@@ -102,16 +102,8 @@ public class MainActivity extends AppCompatActivity {
                         String name = gameObject.get("name").toString();
                         String image = convertToReadableURL(gameObject.get("box_art_url").toString(), (width/3), (height/4));
 
-                        // Cuts the game titles to be under 20 chars to prevent multiline TextView.
-                        String tempName;
-                        if (name.length() > 20) {
-                            tempName = name.substring(0, 20);
-                        } else {
-                            tempName = name;
-                        }
-
                         //Add names and images to arrays so they can be added in the layout.
-                        gameNames.add(tempName);
+                        gameNames.add(name);
                         gameImageURLs.add(image);
 
                     }
