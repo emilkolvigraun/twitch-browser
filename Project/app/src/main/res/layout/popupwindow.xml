@@ -27,13 +27,19 @@
             <TextView
                 android:id="@+id/textView_pop"
                 android:layout_width="match_parent"
-                android:layout_height="517dp"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textAlignment="center"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
     </ScrollView>

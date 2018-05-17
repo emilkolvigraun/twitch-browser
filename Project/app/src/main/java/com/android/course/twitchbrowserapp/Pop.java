@@ -3,15 +3,13 @@ package com.android.course.twitchbrowserapp;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,11 +22,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.net.URL;
 
 /**
  * Created by Emil S. Kolvig-Raun on 20-04-2018.
@@ -38,6 +39,9 @@ public class Pop extends Activity {
 
     private TextView text;
     private ImageView logo_view;
+    private ImageView preview;
+
+    private URL image_url;
     private int width, height;
 
 
@@ -54,8 +58,10 @@ public class Pop extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(display);
 
         logo_view = findViewById(R.id.stream_top_title);
+        preview = findViewById(R.id.preview);
 
         logo_view.setAlpha(0f);
+        preview.setAlpha(0f);
 
         this.width = display.widthPixels;
         this.height = display.heightPixels;
@@ -71,10 +77,19 @@ public class Pop extends Activity {
 
         LinearLayout loading = findViewById(R.id.loadingLayout);
 
-        text.setText(info.toString());
+        String information = info.get(0).toString() + "\n" +
+                "Viewers: " + info.get(1).toString() + "\n" +
+                "Followers: " + info.get(2).toString() + "\n" + "\n" +
+                "Status: "+ info.get(4).toString() + "\n" +
+                "\n" + info.get(5).toString();
+
+
+        text.setText(information);
 
         Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.top_title);
         logo_view.setImageBitmap(title_logo);
+        new DownloadImagesFromURI().execute();
+
 
         loading.setAlpha(0f);
 
@@ -83,6 +98,10 @@ public class Pop extends Activity {
                 .alpha(1f)
                 .setListener(null);
         logo_view.animate()
+                .setDuration(200)
+                .alpha(1f)
+                .setListener(null);
+        preview.animate()
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
@@ -127,22 +146,23 @@ public class Pop extends Activity {
                         String updated_last = recurseKeys(jsonObj, "updated_at");
                         String followers = recurseKeys(jsonObj, "followers");
                         String description = recurseKeys(jsonObj, "description");
-                        String large_image = recurseKeys(jsonObj, "medium");
-                        String id = recurseKeys(jsonObj, "_id");
+                        //URL large_image = new URL(recurseKeys(jsonObj, "medium"));
+                        //String id = recurseKeys(jsonObj, "_id");
 
-                        info.add(game);
+                        String large = recurseKeys(jsonObj, "preview");
+
                         info.add(name);
                         info.add(viewers);
                         info.add(followers);
-                        info.add(large_image);
-                        info.add("Last updated: " + updated_last);
+                        info.add(updated_last);
                         info.add(status);
                         info.add(description);
-                        info.add(id);
 
+                        JSONObject preview_image = new JSONObject(recurseKeys(jsonObj, "preview"));
+                        URL url_preview_image = new URL(preview_image.get("large").toString());
+                        image_url = url_preview_image;
 
-                        // For every entry in the JSONArray make an object and get its name as well as box art.
-                        Log.d("Prints ID", recurseKeys(jsonObj, "name"));
+                        Log.d("Prints ID", url_preview_image.toString());
 
                     } else {
                         info.add("No information available from Twitch.");
@@ -150,6 +170,8 @@ public class Pop extends Activity {
                     setPopUpContent(info);
 
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
 
@@ -174,6 +196,27 @@ public class Pop extends Activity {
         queue.add(jsonObjReq);
 
     }
+
+    private class DownloadImagesFromURI extends AsyncTask<URI, Integer, Long> {
+        private Bitmap image;
+
+        @Override
+        protected Long doInBackground(URI... uris) {
+            try {
+                if(image_url != null){
+                    image = BitmapFactory.decodeStream(image_url.openConnection().getInputStream());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Long result) {
+            preview.setImageBitmap(image);
+        }
+    }
+
 
     public static String recurseKeys(JSONObject jObj, String findKey) throws JSONException {
         String finalValue = "";
