@@ -45,6 +45,7 @@ public class TopUserFragment extends Fragment {
     private ImageView logo_view;
     private ImageView preview;
     private TextView hint_right;
+    Thread thread;
 
     private URL image_url;
 
@@ -73,7 +74,13 @@ public class TopUserFragment extends Fragment {
         logo_view.setAlpha(0f);
         preview.setAlpha(0f);
 
-        requestWithSomeHttpHeaders();
+        thread = new Thread() {
+            @Override
+            public void run() {
+                requestWithSomeHttpHeaders();
+            }
+        };
+        thread.start();
 
         return view;
     }
@@ -85,7 +92,6 @@ public class TopUserFragment extends Fragment {
     }
 
     private void setPopUpContent(ArrayList<String> info){
-        Log.d("DEBUGGING: ", info.toString());
         new DownloadImagesFromURI().execute();
 
         text.setText("Viewers: " + info.get(1).toString() + "\n" + "Followers: " + info.get(2).toString() + "\n");
@@ -124,6 +130,12 @@ public class TopUserFragment extends Fragment {
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean indexExists(final JSONArray list, final int index) {
@@ -165,13 +177,9 @@ public class TopUserFragment extends Fragment {
                         info.add(name);
                         USER_PREFERENCES.setName(name);
 
-                        Thread thread = new Thread() {
-                            @Override
-                            public void run() {
-                                UserListFragment.requestWithSomeHttpHeaders();
-                            }
-                        };
-                        thread.start();
+
+                        UserListFragment.requestWithSomeHttpHeaders();
+
 
                         info.add(viewers);
                         info.add(followers);

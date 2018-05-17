@@ -98,11 +98,11 @@ public class UserListFragment extends Fragment{
                     try {
                         JSONArray viewers = new JSONObject(response.toString()).getJSONObject("chatters").getJSONArray("viewers");
 
-
-                        for(int i = 0; i < 1000; i++){
+                        //loading first 200 viewers...
+                        for(int i = 0; i < 200; i++){
                             user_list += viewers.get(i).toString() + "\n";
                         }
-                        user_list += "...";
+                        user_list += "\n" + " ...and " + (viewers.length()-200) + " more." ;
 
                     } catch (JSONException e) {
                         e.printStackTrace();
