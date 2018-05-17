@@ -4,7 +4,7 @@ package com.android.course.twitchbrowserapp;
  * Created by Emil S. Kolvig-Raun on 20-04-2018.
  */
 
-public class User_Preferences {
+public class USER_PREFERENCES {
 
 
     private static String current_selection = null;

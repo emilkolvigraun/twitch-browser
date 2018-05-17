@@ -5,15 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private int width;
     private int height;
 
-
+    private ViewPager viewPager;
     LinearLayout container;
     LinearLayout loadingLayout;
 
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         requestWithSomeHttpHeaders();
     }
-
 
     public void requestWithSomeHttpHeaders() {
         // Instantiate the RequestQueue.
@@ -194,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.d("BUTTON", "button clicked...");
-            User_Preferences.setSelection(this.name);
-            startActivity(new Intent(MainActivity.this, Pop.class));
+            USER_PREFERENCES.setSelection(this.name);
+            startActivity(new Intent(MainActivity.this, PopUpActivity.class));
         }
     }
 }

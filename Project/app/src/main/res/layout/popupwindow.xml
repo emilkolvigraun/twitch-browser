@@ -32,8 +32,8 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:textColor="#FFD700"
-                android:textSize="24sp"
+                android:textColor="#BDB76B"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -44,8 +44,8 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textColor="#3CB371"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -62,11 +62,26 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textColor="#2F4F4F"
+                android:textSize="16sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/hint_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="swipe right.."
+                android:textColor="#79419E"
+                android:textSize="10sp"
                 android:textStyle="italic" />
 
         </LinearLayout>
+
     </ScrollView>
 
     <LinearLayout
@@ -93,10 +108,6 @@
             android:textAlignment="center" />
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/fragment2"
-        android:name="com.android.course.twitchbrowserapp.GameFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></fragment>
+
 
 </RelativeLayout>

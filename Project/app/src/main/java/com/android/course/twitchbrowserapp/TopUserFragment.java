@@ -1,12 +1,15 @@
 package com.android.course.twitchbrowserapp;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,56 +28,60 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.net.URL;
 
 /**
- * Created by Emil S. Kolvig-Raun on 20-04-2018.
+ * Created by Emil S. Kolvig-Raun on 17-05-2018.
  */
 
-public class Pop extends Activity {
-
+public class TopUserFragment extends Fragment {
     private TextView text;
     private TextView name_text;
     private TextView status_text;
     private ImageView logo_view;
     private ImageView preview;
+    private TextView hint_right;
 
     private URL image_url;
-    private int width, height;
-
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.popupwindow);
+    }
 
-        text = findViewById(R.id.textView_pop);
-        name_text = findViewById(R.id.text_title_view);
-        status_text = findViewById(R.id.status_description_view);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.popupwindow,container,false);
+
+        text = view.findViewById(R.id.textView_pop);
+        name_text = view.findViewById(R.id.text_title_view);
+        status_text = view.findViewById(R.id.status_description_view);
+        hint_right = view.findViewById(R.id.hint_right);
         text.setAlpha(0f);
         name_text.setAlpha(0f);
         status_text.setAlpha(0f);
+        hint_right.setAlpha(0f);
 
-        DisplayMetrics display = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(display);
-
-        logo_view = findViewById(R.id.stream_top_title);
-        preview = findViewById(R.id.preview);
+        logo_view = view.findViewById(R.id.stream_top_title);
+        preview = view.findViewById(R.id.preview);
 
         logo_view.setAlpha(0f);
         preview.setAlpha(0f);
 
-        this.width = display.widthPixels;
-        this.height = display.heightPixels;
-
-        getWindow().setLayout((int)(this.width*0.8), (int)(this.height*0.65));
-
         requestWithSomeHttpHeaders();
 
+        return view;
+    }
+
+    @Override
+    public void onPause() {
+        //DO NOTHING
+        super.onPause();
     }
 
     private void setPopUpContent(ArrayList<String> info){
@@ -82,16 +89,22 @@ public class Pop extends Activity {
         new DownloadImagesFromURI().execute();
 
         text.setText("Viewers: " + info.get(1).toString() + "\n" + "Followers: " + info.get(2).toString() + "\n");
-        name_text.setText(info.get(0).toString() + "\n");
-        status_text.setText("\n" + info.get(4).toString() + "\n" + "\n" + info.get(5).toString() + "\n");
+        name_text.setText(info.get(0).toString());
+        status_text.setText("\n" + info.get(4).toString() + "\n" + "\n" + info.get(5).toString());
 
         Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.top_title);
         logo_view.setImageBitmap(title_logo);
 
-        LinearLayout loading = findViewById(R.id.loadingLayout);
+        LinearLayout loading = getView().findViewById(R.id.loadingLayout);
+        hint_right.setText("\n" + "\n" + "you can swipe right..");
+
         loading.setAlpha(0f);
 
         name_text.animate()
+                .setDuration(200)
+                .alpha(1f)
+                .setListener(null);
+        preview.animate()
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
@@ -107,7 +120,7 @@ public class Pop extends Activity {
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
-        preview.animate()
+        hint_right.animate()
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
@@ -121,14 +134,11 @@ public class Pop extends Activity {
     public void requestWithSomeHttpHeaders() {
 
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         // Constructing URL
-        String game_chosen = User_Preferences.getSelection().replaceAll("\\s","%20");
+        String game_chosen = USER_PREFERENCES.getSelection().replaceAll("\\s","%20");
         String url = "https://api.twitch.tv/kraken/streams/?game=" + game_chosen;
-
-        // DEBUGGING
-        Log.d("STREAM URL", url);
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -162,8 +172,6 @@ public class Pop extends Activity {
                         JSONObject preview_image = new JSONObject(recurseKeys(jsonObj, "preview"));
                         URL url_preview_image = new URL(preview_image.get("large").toString());
                         image_url = url_preview_image;
-
-                        Log.d("Prints image url", url_preview_image.toString());
 
                     } else {
                         info.add("No information available from Twitch.");
