@@ -8,6 +8,7 @@ public class USER_PREFERENCES {
 
 
     private static String current_selection = null;
+    private static String current_name = null;
 
     public static void setSelection(String name){
         current_selection = name;
@@ -15,5 +16,13 @@ public class USER_PREFERENCES {
 
     public static String getSelection(){
         return current_selection;
+    }
+
+    public static void setName(String name){
+        current_name = name;
+    }
+
+    public static String getName(){
+        return current_name;
     }
 }

@@ -163,6 +163,16 @@ public class TopUserFragment extends Fragment {
                         String description = recurseKeys(jsonObj, "description");
 
                         info.add(name);
+                        USER_PREFERENCES.setName(name);
+
+                        Thread thread = new Thread() {
+                            @Override
+                            public void run() {
+                                UserListFragment.requestWithSomeHttpHeaders();
+                            }
+                        };
+                        thread.start();
+
                         info.add(viewers);
                         info.add(followers);
                         info.add(updated_last);

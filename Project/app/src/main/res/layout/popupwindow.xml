@@ -57,8 +57,6 @@
                 android:id="@+id/status_description_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textColor="#2F4F4F"
@@ -69,14 +67,10 @@
                 android:id="@+id/hint_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="swipe right.."
                 android:textColor="#79419E"
-                android:textSize="10sp"
                 android:textStyle="italic" />
 
         </LinearLayout>
