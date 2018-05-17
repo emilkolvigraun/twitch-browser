@@ -38,6 +38,8 @@ import java.net.URL;
 public class Pop extends Activity {
 
     private TextView text;
+    private TextView name_text;
+    private TextView status_text;
     private ImageView logo_view;
     private ImageView preview;
 
@@ -51,8 +53,11 @@ public class Pop extends Activity {
         setContentView(R.layout.popupwindow);
 
         text = findViewById(R.id.textView_pop);
-
+        name_text = findViewById(R.id.text_title_view);
+        status_text = findViewById(R.id.status_description_view);
         text.setAlpha(0f);
+        name_text.setAlpha(0f);
+        status_text.setAlpha(0f);
 
         DisplayMetrics display = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display);
@@ -74,26 +79,27 @@ public class Pop extends Activity {
 
     private void setPopUpContent(ArrayList<String> info){
         Log.d("DEBUGGING: ", info.toString());
+        new DownloadImagesFromURI().execute();
 
-        LinearLayout loading = findViewById(R.id.loadingLayout);
-
-        String information = info.get(0).toString() + "\n" +
-                "Viewers: " + info.get(1).toString() + "\n" +
-                "Followers: " + info.get(2).toString() + "\n" + "\n" +
-                "Status: "+ info.get(4).toString() + "\n" +
-                "\n" + info.get(5).toString();
-
-
-        text.setText(information);
+        text.setText("Viewers: " + info.get(1).toString() + "\n" + "Followers: " + info.get(2).toString() + "\n");
+        name_text.setText(info.get(0).toString() + "\n");
+        status_text.setText("\n" + info.get(4).toString() + "\n" + "\n" + info.get(5).toString() + "\n");
 
         Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.top_title);
         logo_view.setImageBitmap(title_logo);
-        new DownloadImagesFromURI().execute();
 
-
+        LinearLayout loading = findViewById(R.id.loadingLayout);
         loading.setAlpha(0f);
 
+        name_text.animate()
+                .setDuration(200)
+                .alpha(1f)
+                .setListener(null);
         text.animate()
+                .setDuration(200)
+                .alpha(1f)
+                .setListener(null);
+        status_text.animate()
                 .setDuration(200)
                 .alpha(1f)
                 .setListener(null);
@@ -139,17 +145,12 @@ public class Pop extends Activity {
                         JSONObject jsonObj = jsonArr.getJSONObject(0);
 
                         //Retrieve all values
-                        String game = recurseKeys(jsonObj, "game");
                         String viewers = recurseKeys(jsonObj, "viewers");
                         String name = recurseKeys(jsonObj, "name");
                         String status = recurseKeys(jsonObj, "status");
                         String updated_last = recurseKeys(jsonObj, "updated_at");
                         String followers = recurseKeys(jsonObj, "followers");
                         String description = recurseKeys(jsonObj, "description");
-                        //URL large_image = new URL(recurseKeys(jsonObj, "medium"));
-                        //String id = recurseKeys(jsonObj, "_id");
-
-                        String large = recurseKeys(jsonObj, "preview");
 
                         info.add(name);
                         info.add(viewers);
@@ -162,7 +163,7 @@ public class Pop extends Activity {
                         URL url_preview_image = new URL(preview_image.get("large").toString());
                         image_url = url_preview_image;
 
-                        Log.d("Prints ID", url_preview_image.toString());
+                        Log.d("Prints image url", url_preview_image.toString());
 
                     } else {
                         info.add("No information available from Twitch.");
