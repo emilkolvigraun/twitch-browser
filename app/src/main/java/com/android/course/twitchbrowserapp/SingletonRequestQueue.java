@@ -12,18 +12,25 @@ import com.android.volley.toolbox.Volley;
  * Created by Sahin on 18-05-2018.
  */
 
-
+/**
+ *  The Volley request queue.
+ *  Allows for automatic scheduling of network requests.
+ *  Can run multiple concurrent network requests.
+ */
 public class SingletonRequestQueue {
     private static SingletonRequestQueue mInstance;
     private static Context mCtx;
     private RequestQueue mRequestQueue;
 
+    //Internal constructor
     private SingletonRequestQueue(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
     }
 
+
+    //Singleton getInstance()
     public static synchronized SingletonRequestQueue getInstance(Context context) {
         if (mInstance == null) {
             mInstance = new SingletonRequestQueue(context);
@@ -31,10 +38,13 @@ public class SingletonRequestQueue {
         return mInstance;
     }
 
+    // Returns the instantiated request-queue
+    // If the request-queue is null, a new request-queue is added with the
+    // corresponding context
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            // getApplicationContext() is key, it keeps you from leaking the
-            // Activity or BroadcastReceiver if someone passes one in.
+            // getApplicationContext() returns the context
+            // or in this case the activity, as an activity extends context.
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
         return mRequestQueue;

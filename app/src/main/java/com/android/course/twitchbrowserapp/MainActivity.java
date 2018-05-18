@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,11 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,23 +29,29 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Initialising DisplayMetrics
+     * To scale game_images to screen size
+     */
     final DisplayMetrics metrics = new DisplayMetrics();
     private int width;
     private int height;
 
-    LinearLayout container;
-    LinearLayout loadingLayout;
-    ScrollView scrollView;
+    //Declaring elements
+    private LinearLayout container;
+    private LinearLayout loadingLayout;
+    private ScrollView scrollView;
 
     // See AsyncTask "fillLayoutAsyncTask" for more info
     boolean firstLayout = true;
 
-    // Hardcoded rowcount for testing
-    int rowcount = 3;
+    // Hardcoded rowcount = 3, as image sizes are height/4 so there's room for title logo.
+    private int rowcount = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Setting the content layout to activity_main.xml
         setContentView(R.layout.activity_main);
 
         // Get Device Dimensions (Height and Width)
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         height = metrics.heightPixels;
         width = metrics.widthPixels;
 
-
+        //Setting the top logo image from drawable resource
         ImageView logo_view = findViewById(R.id.title_logo);
         Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         logo_view.setImageBitmap(title_logo);
@@ -71,31 +74,39 @@ public class MainActivity extends AppCompatActivity {
         scrollView = findViewById(R.id.gameScrollView);
         scrollView.addView(container);
 
+        //Enabling us to manipulate the appearance of the loading indicator
         loadingLayout = findViewById(R.id.loadingLayout);
 
         // Request Twitch JSON
         requestWithSomeHttpHeaders();
     }
 
+    /**
+     * requestWithSomeHttpHeaders()
+     * Standard webservice call framework.
+     * Uses the VOLLEY HTTP Library.
+     * Not great with large download or streaming operations, as it holds all responses in memory while parsing.
+     * Great tool for a limited number of images and strings. Faster than DownloadManager..
+     */
     public void requestWithSomeHttpHeaders() {
+        //Retrieving the request URL from SETTINGS.
+        String url = SETTINGS.getTopRequestURL();
 
-        String url = "https://api.twitch.tv/helix/games/top";
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url, null, new Response.Listener<JSONObject>() {
+        //Initiates response listener from Volley library
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("Prints", "length of response: " + response.length() + response.toString());
                 try {
+                    //Retrieves the "data" key from the response and recurse through array
                     String gamesJSONString = response.getString("data");
                     JSONArray jsonArr = new JSONArray(gamesJSONString);
                     for (int i = 0; i < jsonArr.length(); i++) {
                         // For every entry in the JSONArray make an object and get its name as well as box art.
                         JSONObject gameObject = jsonArr.getJSONObject(i);
-                        String name = gameObject.get("name").toString();
-                        String imageURL = convertToReadableURL(gameObject.get("box_art_url").toString(), (width/rowcount), (int) (height/(rowcount*1.33)));
 
                         // Construct layouts with images.
+                        String name = gameObject.get("name").toString();
+                        String imageURL = convertToReadableURL(gameObject.get("box_art_url").toString(), (width/rowcount), (int) (height/(rowcount*1.33)));
                         new fillLayoutAsyncTask(i, name, imageURL).execute();
                     }
                 } catch (JSONException e) {
@@ -112,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Client-ID", "hf6aoclq1ddt9w5tfa5o6qzybqs3g1");
-                params.put("Accept", "application/vnd.twitchtv.v5+json");
+                params.put("Client-ID", SETTINGS.getHeaderClientId());
+                params.put("Accept", SETTINGS.getHeaderAccept());
                 return params;
             }
-
         };
+        //Adds the request to the Queue
         SingletonRequestQueue.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
@@ -126,16 +137,17 @@ public class MainActivity extends AppCompatActivity {
     private class fillLayoutAsyncTask extends AsyncTask<Void, Integer, String> {
         private int currentRowCount;
         private int containerChildCount;
-        private String gamename;
+        private String game_name;
         private String URL;
         private Bitmap image;
         private ImageView currentGameImage;
 
-        public fillLayoutAsyncTask(int currentGameCount, String gamename, String URL) {
-            this.gamename = gamename;
+        public fillLayoutAsyncTask(int currentGameCount, String game_name, String URL) {
+            this.game_name = game_name;
             this.URL = URL;
 
             // Calculate the amount of rows added the the current layout via % of the game counter
+            // flooring the value to avoid layout confusion
             this.currentRowCount = currentGameCount%rowcount;
             this.containerChildCount = (int) Math.floor(currentGameCount/rowcount) + 1;
 
@@ -150,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             // On Pre Execute is the first method that is called doing the AsyncTask.
             // This is where the layouts (or columns) in the table is created if necessary.
-
             if (currentRowCount >= rowcount || (containerChildCount == 0 || currentRowCount == 0)) {
                 // Create new row Layout and make the game container visible
                 if (firstLayout) {
@@ -171,10 +182,9 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             // doInBackground is called right after onPreExecute. This is all done in a separate thread.
             // Because this is a separate thread, we are allowed to do network calls. (URL decoding)
-
             // Create current ImageView
             currentGameImage = new ImageView(getApplicationContext());
-            currentGameImage.setOnClickListener(new Click_Listener(gamename));
+            currentGameImage.setOnClickListener(new Click_Listener(game_name));
             currentGameImage.setAdjustViewBounds(true);
             currentGameImage.setAlpha(0f);
             // Decode URL
@@ -204,24 +214,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the cusstom click listener class, to set the "name" selection.
+     */
     private class Click_Listener implements View.OnClickListener {
-
         private String name;
-
+        //Constructor assigns the name to the variable
         public Click_Listener(String name){
             this.name = name;
         }
 
         @Override
         public void onClick(View view) {
-            Log.d("BUTTON", "button clicked...");
-            USER_PREFERENCES.setSelection(this.name);
+            // 1. The name is assigned as selection
+            // 2. The "popup window" activity is started as intent.
+            SETTINGS.setSelection(this.name);
             startActivity(new Intent(MainActivity.this, PopUpActivity.class));
         }
     }
 
+    /**
+     * Used to convert the box_art_url string to a valid URL with the width
+     * and height declared with DisplayMetrics
+     * @param box_art_url
+     * @param width
+     * @param height
+     * @return
+     */
     private String convertToReadableURL(String box_art_url, int width, int height) {
-        return box_art_url
-                .replaceAll("\\{width\\}x\\{height\\}", width + "x" + height);
+        return box_art_url.replaceAll("\\{width\\}x\\{height\\}", width + "x" + height);
     }
 }

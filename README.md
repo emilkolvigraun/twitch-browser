@@ -8,6 +8,9 @@ This application is for browsing the top-20 streamed games on Twitch.
  - **2.**   Open the *twitch-browser* folder with Android Studio.
  - **3.**   Run the project on a device or through the use of an emulator.
  <br>   ....Device preferred.
+
+*If the project doesn't run, turn off* **Instant Run**. <br>
+**File** > **Settings** > **Build, Execution, Deployment** > Remove the tick from **Enable Instant Run to hotswap...**
  
 **The application uses the [Twitch-API](https://dev.twitch.tv/docs/v5).**
 
