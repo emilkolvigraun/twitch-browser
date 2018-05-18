@@ -45,7 +45,7 @@ public class TopUserFragment extends Fragment {
     private ImageView logo_view;
     private ImageView preview;
     private TextView hint_right;
-    Thread thread;
+    private Thread thread;
 
     private URL image_url;
 
