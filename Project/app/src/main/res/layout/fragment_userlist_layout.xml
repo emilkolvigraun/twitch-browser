@@ -43,8 +43,9 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:textColor="#2F4F4F"
-                android:textSize="22sp"/>
+                android:textColor="#3CB371"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/hint_left"

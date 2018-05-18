@@ -98,8 +98,9 @@ public class UserListFragment extends Fragment{
                         JSONArray viewers = new JSONObject(response.toString()).getJSONObject("chatters").getJSONArray("viewers");
 
                         //loading first 200 viewers...
+                        user_list += "\n";
                         for(int i = 0; i < 200; i++){
-                            user_list += viewers.get(i).toString() + "\n";
+                            user_list += (i+1) + ". " + viewers.get(i).toString() + "\n";
                         }
                         user_list += "\n" + " ...and " + (viewers.length()-200) + " more." ;
 
