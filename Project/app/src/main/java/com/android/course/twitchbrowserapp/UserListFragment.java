@@ -34,7 +34,7 @@ public class UserListFragment extends Fragment{
     private static TextView hint_left;
     private static LinearLayout loading;
     private static Activity get_activity;
-    private static String user_list;
+    private static String user_list = "";
 
 
     @Override
@@ -107,7 +107,7 @@ public class UserListFragment extends Fragment{
                         e.printStackTrace();
                     }
                     setPageContent();
-                    user_list = null;
+                    user_list = "";
                 }
             }, new Response.ErrorListener() {
                 @Override
