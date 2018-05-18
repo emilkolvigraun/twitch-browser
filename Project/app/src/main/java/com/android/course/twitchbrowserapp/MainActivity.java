@@ -5,13 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,46 +26,54 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    final ArrayList<String> gameNames = new ArrayList<>();
-    final ArrayList<Bitmap> gameImage = new ArrayList<>();
-    final ArrayList<String> gameImageURLs = new ArrayList<>();
     final DisplayMetrics metrics = new DisplayMetrics();
     private int width;
     private int height;
 
-    private ViewPager viewPager;
     LinearLayout container;
     LinearLayout loadingLayout;
+    ScrollView scrollView;
 
+    // See AsyncTask "fillLayoutAsyncTask" for more info
+    boolean firstLayout = true;
+
+    // Hardcoded rowcount for testing
+    int rowcount = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
+        // Get Device Dimensions (Height and Width)
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         height = metrics.heightPixels;
         width = metrics.widthPixels;
 
-        setContentView(R.layout.activity_main);
 
         ImageView logo_view = findViewById(R.id.title_logo);
-
         Bitmap title_logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         logo_view.setImageBitmap(title_logo);
 
-        container = findViewById(R.id.container);
+        // Initialize/Create the game container layout.
+        container = new LinearLayout(this);
+        LinearLayout.LayoutParams newRowParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setLayoutParams(newRowParams);
         container.setVisibility(View.GONE);
+
+        scrollView = findViewById(R.id.gameScrollView);
+        scrollView.addView(container);
+
         loadingLayout = findViewById(R.id.loadingLayout);
 
+        // Request Twitch JSON
         requestWithSomeHttpHeaders();
     }
 
@@ -85,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Prints", "length of response: " + response.length() + response.toString());
-
-
-
                 try {
                     String gamesJSONString = response.getString("data");
                     JSONArray jsonArr = new JSONArray(gamesJSONString);
@@ -95,14 +101,11 @@ public class MainActivity extends AppCompatActivity {
                         // For every entry in the JSONArray make an object and get its name as well as box art.
                         JSONObject gameObject = jsonArr.getJSONObject(i);
                         String name = gameObject.get("name").toString();
-                        String image = convertToReadableURL(gameObject.get("box_art_url").toString(), (width/3), (height/4));
+                        String imageURL = convertToReadableURL(gameObject.get("box_art_url").toString(), (width/rowcount), (int) (height/(rowcount*1.33)));
 
-                        //Add names and images to arrays so they can be added in the layout.
-                        gameNames.add(name);
-                        gameImageURLs.add(image);
-
+                        // Construct layouts with images.
+                        new fillLayoutAsyncTask(i, name, imageURL).execute();
                     }
-                    new DownloadImagesFromURI().execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -119,64 +122,93 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Client-ID", "hf6aoclq1ddt9w5tfa5o6qzybqs3g1");
                 params.put("Accept", "application/vnd.twitchtv.v5+json");
-
                 return params;
             }
 
         };
         queue.add(jsonObjReq);
-        System.out.println(queue);
     }
-
-    //Fills the container with images as well as matching text.
-    //Gets every child of every layout in the container and sets its text and image.
-    private void fillContainer() {
-        // Fills the scroll
-        int fillCounter = 0;
-        for (int i = 0; i < container.getChildCount(); i++) {
-            for (int j = 0; j < ((LinearLayout)container.getChildAt(i)).getChildCount(); j++) {
-                ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setImageBitmap(gameImage.get(fillCounter));
-                //((TextView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(1)).setText(gameNames.get(fillCounter));
-                ((ImageView)((LinearLayout)((LinearLayout)container.getChildAt(i)).getChildAt(j)).getChildAt(0)).setOnClickListener(new Click_Listener(gameNames.get(fillCounter)));
-                fillCounter++;
-            }
-        }
-        container.setVisibility(View.VISIBLE);
-        loadingLayout.setVisibility(View.GONE);
-
-        // Animation for fade when loading is done
-        container.setAlpha(0f);
-        container.animate()
-                .setDuration(200)
-                .alpha(1f)
-                .setListener(null);
-
-    }
-
-    private String convertToReadableURL(String box_art_url, int width, int height) {
-        return box_art_url
-                .replaceAll("\\{width\\}x\\{height\\}", width + "x" + height);
-    }
-
 
     //AsyncTask for loading the images into bitmap from URL.
     //When images are loaded the view is filled with the views
-    private class DownloadImagesFromURI extends AsyncTask<URI, Integer, Long> {
+    private class fillLayoutAsyncTask extends AsyncTask<Void, Integer, String> {
+        private int currentRowCount;
+        private int containerChildCount;
+        private String gamename;
+        private String URL;
+        private Bitmap image;
+        private ImageView currentGameImage;
+
+        public fillLayoutAsyncTask(int currentGameCount, String gamename, String URL) {
+            this.gamename = gamename;
+            this.URL = URL;
+
+            // Calculate the amount of rows added the the current layout via % of the game counter
+            this.currentRowCount = currentGameCount%rowcount;
+            this.containerChildCount = (int) Math.floor(currentGameCount/rowcount) + 1;
+
+            // If the game is in the first layout but NOT the first its index must never be 0
+            // If it is the first game it will create a new layout
+            if (containerChildCount == 0 && !firstLayout) {
+                containerChildCount = 1;
+            }
+        }
+
         @Override
-        protected Long doInBackground(URI... uris) {
-            try {
-                for (int i = 0; i < gameImageURLs.size(); i++) {
-                    URL url = new URL(gameImageURLs.get(i));
-                    Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    gameImage.add(image);
-            }} catch (IOException e) {
-                    e.printStackTrace();
+        protected void onPreExecute() {
+            // On Pre Execute is the first method that is called doing the AsyncTask.
+            // This is where the layouts (or columns) in the table is created if necessary.
+
+            if (currentRowCount >= rowcount || (containerChildCount == 0 || currentRowCount == 0)) {
+                // Create new row Layout and make the game container visible
+                if (firstLayout) {
+                    firstLayout = false;
+                    container.setVisibility(View.VISIBLE);
+                    loadingLayout.setVisibility(View.GONE);
                 }
+                // Create a new layout if the row is full
+                LinearLayout newCurrentRow = new LinearLayout(getApplicationContext());
+                LinearLayout.LayoutParams newRowParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                newCurrentRow.setOrientation(LinearLayout.HORIZONTAL);
+                newCurrentRow.setLayoutParams(newRowParams);
+                container.addView(newCurrentRow);
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            // doInBackground is called right after onPreExecute. This is all done in a separate thread.
+            // Because this is a separate thread, we are allowed to do network calls. (URL decoding)
+
+            // Create current ImageView
+            currentGameImage = new ImageView(getApplicationContext());
+            currentGameImage.setOnClickListener(new Click_Listener(gamename));
+            currentGameImage.setAdjustViewBounds(true);
+            currentGameImage.setAlpha(0f);
+            // Decode URL
+            try {
+                URL url = new URL(URL);
+                image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                // Only when we know that we got the image decoded we increment the row counter.
+                // If we didn't, we would risk "holes" in our layout with no images if they were not loaded.
+                currentRowCount++;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
-        protected void onPostExecute(Long result) {
-            fillContainer();
+        protected void onPostExecute(String result) {
+            // this method is called right after doInBackground is done, and is on the main thread.
+            // Therefore we are allowed to make UI changes such as .addView() which we cant do in doInBackground().
+            currentGameImage.setImageBitmap(image);
+            ((LinearLayout) container.getChildAt(containerChildCount - 1)).addView(currentGameImage);
+
+            // When image is loaded, fade in the image
+            currentGameImage.animate()
+                    .alpha(1f)
+                    .setDuration(500)
+                    .setListener(null);
         }
     }
 
@@ -194,5 +226,10 @@ public class MainActivity extends AppCompatActivity {
             USER_PREFERENCES.setSelection(this.name);
             startActivity(new Intent(MainActivity.this, PopUpActivity.class));
         }
+    }
+
+    private String convertToReadableURL(String box_art_url, int width, int height) {
+        return box_art_url
+                .replaceAll("\\{width\\}x\\{height\\}", width + "x" + height);
     }
 }
