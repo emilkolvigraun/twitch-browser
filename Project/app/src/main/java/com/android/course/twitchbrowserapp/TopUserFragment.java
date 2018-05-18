@@ -152,7 +152,6 @@ public class TopUserFragment extends Fragment {
         String game_chosen = USER_PREFERENCES.getSelection().replaceAll("\\s","%20");
         String url = "https://api.twitch.tv/kraken/streams/?game=" + game_chosen;
 
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -176,10 +175,7 @@ public class TopUserFragment extends Fragment {
 
                         info.add(name);
                         USER_PREFERENCES.setName(name);
-
-
                         UserListFragment.requestWithSomeHttpHeaders();
-
 
                         info.add(viewers);
                         info.add(followers);
