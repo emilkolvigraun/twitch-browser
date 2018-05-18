@@ -5,16 +5,16 @@ This application is for browsing the top-20 streamed games on Twitch.
 <br>
 ### Instructions
  - **1.**   Clone or download the project.
- - **2.**   Locate the *projects* folder inside the *twitch-browser* folder.
- - **3.**   Open the projects folder with Android Studio.
- - **4.**   Run the project on a device or through an emulator.
+ - **2.**   Open the *twitch-browser* folder with Android Studio.
+ - **3.**   Run the project on a device or through the use of an emulator.
+ <br>   ....Device preferred.
  
 **The application uses the [Twitch-API](https://dev.twitch.tv/docs/v5).**
 
 ## Snapshots
 ### Image of the front page.<br>
 ![snapshot1](https://raw.githubusercontent.com/wizardmil/twitch-browser/master/snapshots/main.png) 
-<br> 
+<br>
 ### Image of the top streamer page.<br>
 ![snapshot1](https://raw.githubusercontent.com/wizardmil/twitch-browser/master/snapshots/top_stream.png) 
 <br>
