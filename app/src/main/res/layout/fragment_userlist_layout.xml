@@ -55,7 +55,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textColor="#79419E"
-                android:textSize="10sp"
+                android:textSize="13sp"
                 android:textStyle="italic" />
 
         </LinearLayout>
