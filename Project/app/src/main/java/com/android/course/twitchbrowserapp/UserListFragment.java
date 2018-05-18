@@ -88,7 +88,6 @@ public class UserListFragment extends Fragment{
             // Constructing URL
             String name_chosen = USER_PREFERENCES.getName().replaceAll("\\s", "%20").toLowerCase();
             String url = "http://tmi.twitch.tv/group/user/" + name_chosen + "/chatters";
-
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     url, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -108,6 +107,7 @@ public class UserListFragment extends Fragment{
                         e.printStackTrace();
                     }
                     setPageContent();
+                    user_list = null;
                 }
             }, new Response.ErrorListener() {
                 @Override
