@@ -145,9 +145,6 @@ public class TopUserFragment extends Fragment {
 
     public void requestWithSomeHttpHeaders() {
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
         // Constructing URL
         String game_chosen = USER_PREFERENCES.getSelection().replaceAll("\\s","%20");
         String url = "https://api.twitch.tv/kraken/streams/?game=" + game_chosen;
@@ -216,7 +213,7 @@ public class TopUserFragment extends Fragment {
             }
 
         };
-        queue.add(jsonObjReq);
+        SingletonRequestQueue.getInstance(this.getContext()).addToRequestQueue(jsonObjReq);
 
     }
 

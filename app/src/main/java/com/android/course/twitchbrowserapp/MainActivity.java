@@ -78,16 +78,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestWithSomeHttpHeaders() {
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
 
         String url = "https://api.twitch.tv/helix/games/top";
-        String stream_url = "https://api.twitch.tv/kraken/streams";
-
-        //"Kraken" is deprecated
-        // a query for pokemon streams
-        // https://api.twitch.tv/kraken/search/streams?query=poker&client_id=CLIENTID
-        // https://api.twitch.tv/kraken/streams/featured
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {
@@ -126,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
-        queue.add(jsonObjReq);
+        SingletonRequestQueue.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     //AsyncTask for loading the images into bitmap from URL.

@@ -82,12 +82,10 @@ public class UserListFragment extends Fragment{
 
     public static void requestWithSomeHttpHeaders() {
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(get_activity);
-
             // Constructing URL
             String name_chosen = USER_PREFERENCES.getName().replaceAll("\\s", "%20").toLowerCase();
             String url = "http://tmi.twitch.tv/group/user/" + name_chosen + "/chatters";
+
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     url, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -126,7 +124,8 @@ public class UserListFragment extends Fragment{
                 }
 
             };
-            queue.add(jsonObjReq);
+        //Use a singleton approach for request queue
+        SingletonRequestQueue.getInstance(get_activity).addToRequestQueue(jsonObjReq);
 
         }
 
